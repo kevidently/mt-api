@@ -26,7 +26,7 @@ A sample MT configuration response:
 	"Variant":"Boulder Account",
 	"Source":"en;fr;it;de;es;nl;pl;*;",
 	"Description":"Generic Microsoft NMT",
-	"Params":"{\"azureKey\":\"aAaAaA1234\"}",
+	"Params":"{\"azureKey\":\"uht3b4eXP\"}",
 	"Site":"boulder",
 	"ConnectorId":"microsoft",
 	"Sequence":10,
