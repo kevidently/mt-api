@@ -1,0 +1,100 @@
+/* Override bootstrap column padding*/
+/* [class^="col-"], [class*=" col-"] { */
+/* 	padding-left: 0; */
+/* 	padding-right: 0; */
+/* } */
+
+.form-group { margin-bottom: 8px; }
+
+.buttonRow { margin-top: 14px; }
+
+.itemSelector { font-size: 1.3em; }
+
+.headerRow { display: flex; align-items: center; margin-bottom: 1.5em; }
+
+.headerItem { display: inline-block; margin-right: 2em; }
+
+html {
+	padding: 2em;
+	overflow-y: scroll;
+}
+
+input.form-control, textarea.form-control {
+	padding: 5px;
+}
+
+textarea.form-control  {
+	font: 1em monospace;
+}
+
+label {
+	padding: 0.2em 0;
+	font-size: 1em;
+}
+
+h2 {
+	margin: 0 0 0 0;
+}
+
+.ctrlContainer { margin: 2em 0; }
+
+.borderRed { border: 1px red solid; }
+
+.successBox {
+	position: absolute;
+	padding: 5px;
+/* 	background: rgba(18, 130, 25, .7); transparency bg color*/ 
+	background: white;
+	z-index: 9999;
+	border-radius: 10px;
+	border: 3px solid green;
+	font: 1em Sans-Serif;
+	color: green;
+	animation-duration: 2s;
+	animation-name: showbox;
+}
+
+.errorBox {
+	position: absolute;
+	padding: 5px;
+	background: white;
+	z-index: 9999;
+	border-radius: 10px;
+	border: 3px solid red;
+	font: 1em Sans-Serif;
+	color: red;
+	animation-duration: 2s;
+	animation-name: showbox;
+}
+
+.innerBoxText {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	white-space: nowrap;
+}
+
+@keyframes showbox {
+	0% {
+		width: 400px;
+		height: 100px;
+		opacity: 0;
+		font: 2.3em Sans-Serif;
+	}
+
+	25% {
+		opacity: 1;
+	}
+	
+	75% {
+		opacity: 1;
+	}
+	
+	100% {
+		width: 520px;
+		height: 130px;
+		opacity: 0;
+		font: 2.8em Sans-Serif;
+	}
+}

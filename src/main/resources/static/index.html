@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+
+<html data-ng-app="mtApp">
+
+	<head>
+		<title>PretendCo MT Data</title>
+		<meta charset="UTF-8">
+		<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css" />
+		<link rel="stylesheet" type="text/css" href="css/common.css" />
+	</head>
+
+	<body spellcheck="false">
+		<div class="container">
+			<uib-tabset>
+
+				<!-- MT Configs -->
+				<uib-tab index="0" heading="MT Configs">
+					<div class="ctrlContainer" data-ng-controller="mtConfigCtrl">
+						<div class="headerRow">
+							<div class="headerItem">
+								<h2>PretendCo MT Configurations</h2>
+							</div>
+							<div class="headerItem">
+								<button type="button" class="btn btn-primary"
+									data-ng-click="synchronizeKantan()" >
+									Synchronize Kantan
+								</button>
+							</div>
+						</div>
+						<div class="row">
+							<div id="configSelectorContainer" class="col-sm-6">
+								<div class="form-group">
+									<select class="itemSelector form-control" 
+										data-ng-model="data.selectedConfig" 
+										data-ng-options="(
+										config.Variant != null ?
+										config.Description + ' (' + config.Variant + ')' :
+										config.Description
+										)
+										for config in data.mtConfigs" 
+										data-ng-change="selectedConfigChanged()"
+										size="16">
+									</select>
+								</div>
+							</div>
+							<div id="configValuesContainer" class="col-sm-6">
+								<form class="form-horizontal">
+									<div class="form-group">
+										<label for="ConfigId" class="col-sm-3 control-label">Config ID: </label>
+										<div class="col-sm-9">
+											<input id="ConfigId" disabled class="form-control" 
+												data-ng-model="data.workingConfig.Id" 
+												data-ng-change="checkConfigValid()"/>
+										</div>
+									</div>
+									<div class="form-group">
+										<label for="ClientId" class="col-sm-3 control-label">Client ID: </label>
+										<div class="col-sm-9">
+											<input id="ClientId" class="form-control" 
+												data-ng-model="data.workingConfig.ClientId" 
+												data-ng-change="checkConfigValid()"/>
+										</div>
+									</div>
+									<div class="form-group">
+										<label for="Sequence" class="col-sm-3 control-label">Sequence: </label>
+										<div class="col-sm-9">
+											<input id="Sequence" class="form-control" 
+												data-ng-model="data.workingConfig.Sequence" 
+												data-ng-change="checkConfigValid()"/>
+										</div>
+									</div>
+									<div class="form-group">
+										<label for="Site" class="col-sm-3 control-label">Site: </label>
+										<div class="col-sm-9">
+											<input id="Site" class="form-control" 
+												data-ng-model="data.workingConfig.Site" 
+												data-ng-change="checkConfigValid()"/>
+										</div>
+									</div>
+									<div class="form-group">
+										<label for="Source" class="col-sm-3 control-label">Source: </label>
+										<div class="col-sm-9">
+											<input id="Source" class="form-control" 
+												data-ng-model="data.workingConfig.Source" 
+												data-ng-change="checkConfigValid()"/>
+										</div>
+									</div>
+									<div class="form-group">
+										<label for="Target" class="col-sm-3 control-label">Target: </label>
+										<div class="col-sm-9">
+											<input id="Target" class="form-control" 
+												data-ng-model="data.workingConfig.Target" 
+												data-ng-change="checkConfigValid()"/>
+										</div>
+									</div>
+									<div class="form-group">
+										<label for="Variant" class="col-sm-3 control-label">Variant: </label>
+										<div class="col-sm-9">
+											<input id="Variant" class="form-control" 
+												data-ng-model="data.workingConfig.Variant" 
+												data-ng-change="checkConfigValid()"/>
+										</div>
+									</div>
+									<div class="form-group">
+										<label for="Description" class="col-sm-3 control-label">Description: </label>
+										<div class="col-sm-9">
+											<input id="Description" class="form-control" 
+												data-ng-model="data.workingConfig.Description" 
+												data-ng-change="checkConfigValid()"/>
+										</div>
+									</div>
+									<div class="form-group">
+										<label for="ConnectorId" class="col-sm-3 control-label">Connector ID: </label>
+										<div class="col-sm-9">
+											<input id="ConnectorId" class="form-control" 
+												data-ng-model="data.workingConfig.ConnectorId" 
+												data-ng-change="checkConfigValid()"/>
+										</div>
+									</div>
+									<div class="form-group">
+										<label for="Params" class="col-sm-3 control-label">Params: </label>
+										<div class="col-sm-9">
+											<textarea class="form-control" rows="6" 
+												data-ng-model="data.workingConfig.Params" 
+												data-ng-change="checkConfigValid()"></textarea>
+										</div>
+									</div>
+									<div class="buttonRow form-group">
+										<div class="col-sm-offset-3 col-sm-9">
+											<div class="col-sm-4">
+												<button type="button" class="btn btn-success btn-block"
+													data-ng-click="saveConfig($event)"
+													data-ng-disabled="!data.isConfigValid">
+												Save
+												</button>
+											</div>
+											<div class="col-sm-4">
+												<button type="button" class="btn btn-primary btn-block"
+													data-ng-click="cloneConfig()"
+													data-ng-disabled="data.workingConfig.Id == data.textCreateNewId">
+												Clone
+												</button>
+											</div>
+											<div class="col-sm-4">
+												<button type="button" class="btn btn-danger btn-block" 
+													data-ng-click="deleteConfigDialog()"
+													data-ng-disabled="data.workingConfig.Id == data.textCreateNewId">
+												Delete...
+												</button>
+											</div>
+										</div>
+									</div>
+								</form>
+							</div>
+						</div>
+					</div>
+				</uib-tab>
+
+				<!-- MT Languages -->
+				<uib-tab index="1" heading="MT Languages">
+					<div class="ctrlContainer" data-ng-controller="mtLangCtrl">
+						<div class="headerRow">
+							<div class="headerItem">
+								<h2>PretendCo MT Languages</h2>
+							</div>
+						</div>
+						<div class="row">
+							<div id="langSelectorContainer" class="col-sm-6">
+								<div class="form-group">
+									<select class="itemSelector form-control" 
+										data-ng-model="langs.selectedLang" 
+										data-ng-options="lang.Pair for lang in langs.mtLangs" 
+										data-ng-change="selectedLangChanged()"
+										size="16">
+									</select>
+								</div>
+							</div>
+							<div id="langValuesContainer" class="col-sm-6">
+								<form class="form-horizontal">
+									<div class="form-group">
+										<label for="langId" class="col-sm-3 control-label">Lang ID: </label>
+										<div class="col-sm-9">
+											<input id="langId" disabled class="form-control" 
+												data-ng-model="langs.workingLang.Id" 
+												data-ng-change="checkLangValid()"/>
+										</div>
+									</div>
+									<div class="form-group">
+										<label for="Source" class="col-sm-3 control-label">Source: </label>
+										<div class="col-sm-9">
+											<input id="Source" class="form-control" 
+												data-ng-model="langs.workingLang.Source" 
+												data-ng-change="checkLangValid()"/>
+										</div>
+									</div>
+									<div class="form-group">
+										<label for="Target" class="col-sm-3 control-label">Target: </label>
+										<div class="col-sm-9">
+											<input id="Target" class="form-control" 
+												data-ng-model="langs.workingLang.Target" 
+												data-ng-change="checkLangValid()"/>
+										</div>
+									</div>
+									<div class="buttonRow form-group">
+										<div class="col-sm-offset-3 col-sm-9">
+											<div class="col-sm-4">
+												<button type="button" class="btn btn-success btn-block"
+													data-ng-click="saveLang($event)"
+													data-ng-disabled="!langs.isLangValid">
+												Save
+												</button>
+											</div>
+											<div class="col-sm-4">
+												<button type="button" class="btn btn-primary btn-block"
+													data-ng-click="cloneLang()"
+													data-ng-disabled="langs.workingLang.Id == langs.textCreateNewId">
+												Clone
+												</button>
+											</div>
+											<div class="col-sm-4">
+												<button type="button" class="btn btn-danger btn-block" 
+													data-ng-click="deleteLangDialog()"
+													data-ng-disabled="langs.workingLang.Id == langs.textCreateNewId">
+												Delete...
+												</button>
+											</div>
+										</div>
+									</div>
+								</form>
+							</div>
+						</div>
+					</div>
+				</uib-tab>
+
+				<!-- Kantan Engines -->
+				<uib-tab index="2" heading="Kantan Engines">
+					<div class="ctrlContainer" data-ng-controller="kantanEngineCtrl">
+
+						<div class="headerRow">
+							<div class="headerItem">
+								<h2>Kantan Engine Info</h2>
+							</div>
+						</div>
+						<div class="row">
+							<div id="engineSelectorContainer" class="col-sm-6">
+								<div class="form-group">
+									<select class="itemSelector form-control" 
+										data-ng-model="engines.selectedEngine" 
+										data-ng-options="engine.name for engine in engines.kantanEngines" 
+										data-ng-change="selectedEngineChanged()"
+										size="16">
+									</select>
+								</div>
+							</div>
+							<div id="engineValuesContainer" class="col-sm-6">
+								<form class="form-horizontal">
+									<div class="form-group">
+										<label for="ter" class="col-sm-3 control-label">ter: </label>
+										<div class="col-sm-9">
+											<input id="ter" disabled class="form-control" 
+												data-ng-model="engines.workingEngine.ter"/>
+										</div>
+									</div>
+									<div class="form-group">
+										<label for="processedwc" class="col-sm-3 control-label">processedwc: </label>
+										<div class="col-sm-9">
+											<input id="processedwc" disabled class="form-control" 
+												data-ng-model="engines.workingEngine.processedwc"/>
+										</div>
+									</div>
+									<div class="form-group">
+										<label for="wc" class="col-sm-3 control-label">wc: </label>
+										<div class="col-sm-9">
+											<input id="wc" disabled class="form-control" 
+												data-ng-model="engines.workingEngine.wc"/>
+										</div>
+									</div>
+									<div class="form-group">
+										<label for="uniquewc" class="col-sm-3 control-label">uniquewc: </label>
+										<div class="col-sm-9">
+											<input id="uniquewc" disabled class="form-control" 
+												data-ng-model="engines.workingEngine.uniquewc"/>
+										</div>
+									</div>
+									<div class="form-group">
+										<label for="src" class="col-sm-3 control-label">src: </label>
+										<div class="col-sm-9">
+											<input id="src" disabled class="form-control" 
+												data-ng-model="engines.workingEngine.src"/>
+										</div>
+									</div>
+									<div class="form-group">
+										<label for="srcname" class="col-sm-3 control-label">srcname: </label>
+										<div class="col-sm-9">
+											<input id="srcname" disabled class="form-control" 
+												data-ng-model="engines.workingEngine.srcname"/>
+										</div>
+									</div>
+									<div class="form-group">
+										<label for="trg" class="col-sm-3 control-label">trg: </label>
+										<div class="col-sm-9">
+											<input id="trg" disabled class="form-control" 
+												data-ng-model="engines.workingEngine.trg"/>
+										</div>
+									</div>
+									<div class="form-group">
+										<label for="trgname" class="col-sm-3 control-label">trgname: </label>
+										<div class="col-sm-9">
+											<input id="trgname" disabled class="form-control" 
+												data-ng-model="engines.workingEngine.trgname"/>
+										</div>
+									</div>
+									<div class="form-group">
+										<label for="library" class="col-sm-3 control-label">library: </label>
+										<div class="col-sm-9">
+											<input id="library" disabled class="form-control" 
+												data-ng-model="engines.workingEngine.library"/>
+										</div>
+									</div>
+									<div class="form-group">
+										<label for="engineName" class="col-sm-3 control-label">name: </label>
+										<div class="col-sm-9">
+											<input id="engineName" disabled class="form-control" 
+												data-ng-model="engines.workingEngine.name"/>
+										</div>
+									</div>
+									<div class="form-group">
+										<label for="alias" class="col-sm-3 control-label">alias: </label>
+										<div class="col-sm-9">
+											<input id="alias" disabled class="form-control" 
+												data-ng-model="engines.workingEngine.alias"/>
+										</div>
+									</div>
+									<div class="form-group">
+										<label for="fmeasure" class="col-sm-3 control-label">fmeasure: </label>
+										<div class="col-sm-9">
+											<input id="fmeasure" disabled class="form-control" 
+												data-ng-model="engines.workingEngine.fmeasure"/>
+										</div>
+									</div>
+									<div class="form-group">
+										<label for="bluescore" class="col-sm-3 control-label">bluescore: </label>
+										<div class="col-sm-9">
+											<input id="bluescore" disabled class="form-control" 
+												data-ng-model="engines.workingEngine.bluescore"/>
+										</div>
+									</div>
+								</form>
+							</div>
+						</div>
+					</div>
+				</uib-tab>
+
+			</uib-tabset>
+
+		</div> <!-- End main container -->
+
+		<!-- third party -->
+		<script src="js/third-party/jquery.min.js"></script>
+		<script src="js/third-party/bootstrap.min.js"></script>
+		<script src="js/third-party/angular.js"></script>
+		<script src="js/third-party/ui-bootstrap-tpls.min.js"></script>
+		<script src="js/third-party/angular-sanitize.min.js"></script>
+
+		<!-- js imports -->
+		<script src="js/mtApp.js"></script>
+		<script src="js/alertService.js"></script>
+		<script src="js/dialogService.js"></script>
+		<script src="js/mtLangs.js"></script>
+		<script src="js/mtConfigs.js"></script>
+		<script src="js/kantanEngines.js"></script>
+		<script src="js/controllers.js"></script>
+
+	</body>
+
+</html>
